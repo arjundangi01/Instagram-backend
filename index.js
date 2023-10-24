@@ -7,7 +7,7 @@ const commentRouter = require("./routes/comment.routes");
 const notificationRouter = require("./routes/notification.routes");
 const followerRouter = require("./routes/follower.routes");
 
-// --------------------
+// ---------------------
 require("dotenv").config();
 
 const PORT = process.env.PORT;
