@@ -5,10 +5,11 @@ const commentSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    authorID:{type:String,required:true},
+    postID:{type:String,required:true},
+    user_id:{type:String,required:true},
     comment_like:Number
 })
 
-const commentModel=mongoose.model('comment',commentSchema);
+const CommentModel=mongoose.model('comment',commentSchema);
 
-module.exports=commentModel;
+module.exports=CommentModel;
