@@ -2,6 +2,9 @@ const { default: mongoose } = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
+    profileImage: {
+      type: String,
+    },
     userName: {
       type: String,
       unique: true,
@@ -33,5 +36,5 @@ const userSchema = mongoose.Schema(
   }
 );
 
-const UserModel = mongoose.model('instagram_users', userSchema);
-module.exports = UserModel
+const UserModel = mongoose.model("instagram_users", userSchema);
+module.exports = UserModel;

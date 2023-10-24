@@ -1,5 +1,5 @@
 const express = require("express");
-
+const cors = require("cors");
 const connection = require("./config/db");
 const userRouter = require("./routes/user.routes");
 const postRouter = require("./routes/post.routes");
@@ -19,16 +19,17 @@ app.use(
   })
 );
 app.use(express.json());
-app.use('/user',userRouter)
-app.use('/post',postRouter)
-app.use('/comment',commentRouter)
-app.use('/notification',notificationRouter)
-app.use('/follower',followerRouter)
+app.use("/user", userRouter);
+app.use("/post", postRouter);
+app.use("/comment", commentRouter);
+app.use("/notification", notificationRouter);
+app.use("/follower", followerRouter);
 
 app.listen(PORT, async () => {
   try {
     await connection;
     console.log(`server running on ${PORT}`);
+    console.log("database connected");
   } catch (error) {
     console.log("error while listening", error);
   }
