@@ -19,11 +19,11 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/user", userRouter);
-app.use("/post", postRouter);
-app.use("/comment", commentRouter);
-app.use("/notification", notificationRouter);
-app.use("/follower", followerRouter);
+app.use("/users", userRouter);
+app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
+app.use("/notifications", notificationRouter);
+app.use("/followers", followerRouter);
 
 app.listen(PORT, async () => {
   try {
