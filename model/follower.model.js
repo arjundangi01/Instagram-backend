@@ -9,7 +9,7 @@ const followerSchema = mongoose.Schema(
     followedTo: {
       type: String,
       required: true,
-    },
+    }
   },
   {
     timestamps: true,
