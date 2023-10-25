@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors")
 
 const connection = require("./config/db");
 const userRouter = require("./routes/user.routes");
@@ -7,7 +8,7 @@ const commentRouter = require("./routes/comment.routes");
 const notificationRouter = require("./routes/notification.routes");
 const followerRouter = require("./routes/follower.routes");
 
-// ---------------------
+// --------------------
 require("dotenv").config();
 
 const PORT = process.env.PORT;
@@ -19,11 +20,11 @@ app.use(
   })
 );
 app.use(express.json());
-app.use('/user',userRouter)
-app.use('/post',postRouter)
-app.use('/comment',commentRouter)
-app.use('/notification',notificationRouter)
-app.use('/follower',followerRouter)
+app.use('/users',userRouter)
+app.use('/posts',postRouter)
+app.use('/comments',commentRouter)
+app.use('/notifications',notificationRouter)
+app.use('/followers',followerRouter)
 
 app.listen(PORT, async () => {
   try {
