@@ -2,11 +2,12 @@ const express = require('express')
 const { model } = require('mongoose');
 const PostModel = require('../model/post.model');
 const CommentModel = require('../model/comment.model');
+const { authentication } = require('../middlewares/authentication.middleware');
 require('dotenv').config()
 
 const commentRouter = express.Router();
 
-commentRouter.get('/:post_id',async (req,res)=>{
+commentRouter.get('/:post_id',authentication,async (req,res)=>{
    try {
     const post_id=req.params.post_id;
     const comments=await CommentModel.find({postID:post_id});
@@ -16,7 +17,7 @@ commentRouter.get('/:post_id',async (req,res)=>{
    }
 })
 
-commentRouter.post('/:post_id',async (req,res)=>{
+commentRouter.post('/:post_id',authentication,async (req,res)=>{
     try {
         const post_id=req.params.post_id;
         const input=req.body;
@@ -33,7 +34,7 @@ commentRouter.post('/:post_id',async (req,res)=>{
     }
 })
 
-commentRouter.delete('/:comment_id',async (req,res)=>{
+commentRouter.delete('/:comment_id',authentication,async (req,res)=>{
     try {
         const comment_id=req.params.comment_id;
         const comment=await CommentModel.deleteOne({_id:comment_id});

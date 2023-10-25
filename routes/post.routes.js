@@ -2,11 +2,12 @@ const express = require("express");
 const PostModel = require("../model/post.model");
 const FollowerModel = require("../model/follower.model");
 const UserModel = require("../model/user.model");
+const { authentication } = require("../middlewares/authentication.middleware");
 
 const postRouter = express.Router();
 
 //getting post for homepage if user  logged in
-postRouter.get("/private", async (req, res) => {
+postRouter.get("/private",authentication, async (req, res) => {
   const { userId } = req.userId;
   //   const userId = "user1";
 
@@ -62,7 +63,7 @@ postRouter.get("/post:postId", async (req, res) => {
   res.send({ post: retrievedPost, user: authorOfPost });
 });
 
-postRouter.post("/", async (req, res) => {
+postRouter.post("/",authentication, async (req, res) => {
   try {
     const userId = req.userId;
     // const userId = "aman";
@@ -76,7 +77,7 @@ postRouter.post("/", async (req, res) => {
   }
 });
 
-postRouter.delete("/:postId", async (req, res) => {
+postRouter.delete("/:postId",authentication, async (req, res) => {
   try {
     const userId = req.userId;
     // const userId = 'user1';
