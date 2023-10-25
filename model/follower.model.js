@@ -1,6 +1,20 @@
+const { default: mongoose } = require("mongoose");
 
-const express = require("express");
+const followerSchema = mongoose.Schema(
+  {
+    followedBy: {
+      type: String,
+      required: true,
+    },
+    followedTo: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const userRouter = express.Router();
-
-module.exports = userRouter
+const FollowerModel = mongoose.model("instagram_follower", followerSchema);
+module.exports = FollowerModel;
