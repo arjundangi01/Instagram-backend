@@ -17,7 +17,7 @@ postRouter.get("/private", async (req, res) => {
     { _id: 0, followedBy: 0, __v: 0 }
   );
   const followedUserIds = findUserFollowsTo.map((ele) => ele.followedTo);
-  //  console.log(followedUserIds,findUserFollowsTo)
+  //  console.log(followedUserIds,findUserFollowsTo )
   const followedUserPosts = await PostModel.find({
     authorId: { $in: followedUserIds },
   })
