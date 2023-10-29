@@ -55,12 +55,22 @@ userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email });
   if (user) {
-    const token = jwt.sign({ userId: user._id }, "secretkey");
-    res.cookie("insta_token", token, {
-      httpOnly: false,
-      sameSite: "lax",
-    });
-    res.send({ msg: "logged in successfully", token });
+    bcrypt.compare(password, user.password,async function(err, result) {
+      if(err || !result){
+         return res.send("please signup first");
+      }
+      else{
+          const userObj={
+              userId:user._id
+          }
+          const token=jwt.sign(userObj,'secretkey');
+          res.cookie("insta_token", token, {
+            httpOnly: false,
+            sameSite: "lax",
+          });
+          res.send({ msg: "logged in successfully", token });
+      }
+  });
   } else {
     res.status(404).send({ msg: "user not found" });
   }
