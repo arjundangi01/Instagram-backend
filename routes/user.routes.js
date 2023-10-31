@@ -20,7 +20,18 @@ userRouter.get("/", authentication, async (req, res) => {
     res.status(500).send({ msg: "internal server error" });
   }
 });
-
+userRouter.get("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(404).send({ msg: "user not found" });
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ msg: "internal server error" });
+  }
+});
 userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
   try {
     const followers = await FollowerModel.distinct("followedBy", {
