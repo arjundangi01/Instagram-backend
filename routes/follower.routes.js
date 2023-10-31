@@ -9,8 +9,11 @@ followerRouter.get('/:profile_id',authentication,async (req,res)=>{
     try {
         const {profile_id}=req.params;
         const follower=await FollowerModel.find({followedTo:profile_id});
-        const following=await FollowerModel.find({followedBy:profile_id});
-        res.json({Followers:follower,Following:following});
+        const following = await FollowerModel.find({ followedBy: profile_id });
+        // [{}, {}]
+        // ["ids","ids","ids"]
+        res.json({ Followers: follower, Following: following });
+        
     } catch (error) {
         console.log(error);
     }
