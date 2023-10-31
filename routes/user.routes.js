@@ -4,6 +4,7 @@ const { authentication } = require("../middlewares/authentication.middleware");
 const UserModel = require("../model/user.model");
 const checkUser = require("../middlewares/userMiddlewares/checkUser.middleware");
 const jwt = require("jsonwebtoken");
+const FollowerModel = require("../model/follower.model");
 
 const userRouter = express.Router();
 const saltRounds = 10;
@@ -17,6 +18,39 @@ userRouter.get("/", authentication, async (req, res) => {
     }
   } catch (err) {
     res.status(500).send({ msg: "internal server error" });
+  }
+});
+
+userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
+  try {
+    const followers = await FollowerModel.distinct("followedBy", {
+      followedTo: req.userId,
+    });
+    const following = await FollowerModel.distinct("followedTo", {
+      followedBy: req.userId,
+    });
+    const unfollowedUsers = await UserModel.find({ _id: { $nin: following } });
+    console.log(unfollowedUsers);
+    res.send(unfollowedUsers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ msg: "internal server error" });
+  }
+});
+
+userRouter.get("/search", async (req, res) => {
+  try {
+    const { input } = req.body;
+
+    const regexp = new RegExp(input, "i");
+
+    const searchedUsers = await UserModel.find({
+      $or: [{ name: { $regex: regexp } }, { userName: { $regex: regexp } }],
+    });
+
+    res.send(searchedUsers);
+  } catch (err) {
+    console.log(err);
   }
 });
 
@@ -55,12 +89,21 @@ userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email });
   if (user) {
-    const token = jwt.sign({ userId: user._id }, "secretkey");
-    res.cookie("insta_token", token, {
-      httpOnly: false,
-      sameSite: "lax",
+    bcrypt.compare(password, user.password, async function (err, result) {
+      if (err || !result) {
+        return res.send("please signup first");
+      } else {
+        const userObj = {
+          userId: user._id,
+        };
+        const token = jwt.sign(userObj, "secretkey");
+        res.cookie("insta_token", token, {
+          httpOnly: false,
+          sameSite: "lax",
+        });
+        res.send({ msg: "logged in successfully", token });
+      }
     });
-    res.send({ msg: "logged in successfully", token });
   } else {
     res.status(404).send({ msg: "user not found" });
   }

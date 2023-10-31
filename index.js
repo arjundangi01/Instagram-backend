@@ -6,6 +6,7 @@ const postRouter = require("./routes/post.routes");
 const commentRouter = require("./routes/comment.routes");
 const notificationRouter = require("./routes/notification.routes");
 const followerRouter = require("./routes/follower.routes");
+const passport = require("passport");
 
 // --------------------
 require("dotenv").config();
@@ -19,6 +20,9 @@ app.use(
   })
 );
 app.use(express.json());
+app.get('/',(req,res)=>{
+  res.send('Welcome to Instagram Server')
+})
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
