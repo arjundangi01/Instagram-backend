@@ -20,7 +20,7 @@ userRouter.get("/", authentication, async (req, res) => {
     res.status(500).send({ msg: "internal server error" });
   }
 });
-userRouter.get("/:userId", async (req, res) => {
+userRouter.get("/single/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await UserModel.findById(userId);
