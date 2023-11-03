@@ -7,6 +7,7 @@ const commentRouter = require("./routes/comment.routes");
 const notificationRouter = require("./routes/notification.routes");
 const followerRouter = require("./routes/follower.routes");
 const passport = require("passport");
+const likesRouter = require("./routes/likes.routes");
 
 // --------------------
 require("dotenv").config();
@@ -17,18 +18,19 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:3000"],
+    credentials: true,
   })
 );
 app.use(express.json());
-app.get('/',(req,res)=>{
-  res.send('Welcome to Instagram Server')
-})
+app.get("/", (req, res) => {
+  res.send("Welcome to Instagram Server");
+});
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/notifications", notificationRouter);
 app.use("/followers", followerRouter);
-
+app.use("/likes", likesRouter);
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
