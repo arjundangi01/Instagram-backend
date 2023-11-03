@@ -62,12 +62,11 @@ postRouter.get("/post:postId", async (req, res) => {
 postRouter.post("/", authentication, async (req, res) => {
   try {
     const userId = req.userId;
-    // const userId = "aman";
 
-    const input = req.body;
-    const newObj = { ...input, authorId: userId };
-    const newPostAddedToDataBase = await PostModel.create(newObj);
-    res.send({ message: "Post Added", newPost: newPostAddedToDataBase });
+    const payload = req.body;
+    const newObj = { ...payload, authorId: userId };
+    const createdPost = await PostModel.create(newObj);
+    res.send({ message: "Post Added", newPost: createdPost });
   } catch (error) {
     console.log("error while creating new Post", error);
   }
