@@ -7,11 +7,11 @@ const { authentication } = require("../middlewares/authentication.middleware");
 const postRouter = express.Router();
 
 //getting post for homepage if user  logged in
-postRouter.get("/private",authentication, async (req, res) => {
+postRouter.get("/private", authentication, async (req, res) => {
   const { userId } = req.userId;
   //   const userId = "user1";
 
-  const { page, limit } = req.query;
+  // const { page, limit } = req.query;
 
   const findUserFollowsTo = await FollowerModel.find(
     { followedBy: userId },
@@ -21,16 +21,12 @@ postRouter.get("/private",authentication, async (req, res) => {
   //  console.log(followedUserIds,findUserFollowsTo )
   const followedUserPosts = await PostModel.find({
     authorId: { $in: followedUserIds },
-  })
-    .skip(page * limit - limit)
-    .limit(limit);
+  });
 
   const remainingPosts = await PostModel.find({
     authorId: { $nin: followedUserIds },
-  })
-    .skip(page * limit - limit)
-    .limit(limit);
-  //   console.log(followedUserPosts);
+  });
+
   followedUserPosts.sort((a, b) => b.createdAt - a.createdAt);
   remainingPosts.sort((a, b) => b.createdAt - a.createdAt);
   const combinedPost = followedUserPosts.concat(remainingPosts);
@@ -63,7 +59,7 @@ postRouter.get("/post:postId", async (req, res) => {
   res.send({ post: retrievedPost, user: authorOfPost });
 });
 
-postRouter.post("/",authentication, async (req, res) => {
+postRouter.post("/", authentication, async (req, res) => {
   try {
     const userId = req.userId;
     // const userId = "aman";
@@ -77,7 +73,7 @@ postRouter.post("/",authentication, async (req, res) => {
   }
 });
 
-postRouter.delete("/:postId",authentication, async (req, res) => {
+postRouter.delete("/:postId", authentication, async (req, res) => {
   try {
     const userId = req.userId;
     // const userId = 'user1';

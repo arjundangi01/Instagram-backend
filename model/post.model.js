@@ -11,7 +11,6 @@ const postSchema = mongoose.Schema(
       type: String,
     },
     caption: {
-      required: true,
       type: String,
     },
   },
