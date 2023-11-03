@@ -37,10 +37,9 @@ postRouter.get("/private", authentication, async (req, res) => {
 //getting post for homepage if user not logged in
 postRouter.get("/public", async (req, res) => {
   const { page, limit } = req.query;
-  const allPostFromDB = await PostModel.find({})
-    .skip(page * limit - limit)
-    .limit(limit);
-  res.send(allPostFromDB);
+  const allPostFromDB = await PostModel.find({});
+
+  res.send(allPostFromDB.sort((a, b) => b.createdAt - a.createdAt));
 });
 
 // getting all post of particular user
@@ -64,7 +63,13 @@ postRouter.post("/", authentication, async (req, res) => {
     const userId = req.userId;
 
     const payload = req.body;
-    const newObj = { ...payload, authorId: userId };
+    const user = await UserModel.findOne({ _id: userId });
+    const newObj = {
+      ...payload,
+      authorId: userId,
+      author: user.name,
+      authorImage: user.profileImage,
+    };
     const createdPost = await PostModel.create(newObj);
     res.send({ message: "Post Added", newPost: createdPost });
   } catch (error) {

@@ -13,6 +13,14 @@ const postSchema = mongoose.Schema(
     caption: {
       type: String,
     },
+    author: {
+      type: String,
+      required: true,
+    },
+    authorImage: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
