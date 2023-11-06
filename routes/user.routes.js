@@ -20,7 +20,7 @@ userRouter.get("/", authentication, async (req, res) => {
     res.status(500).send({ msg: "internal server error" });
   }
 });
-userRouter.get("/:userId", async (req, res) => {
+userRouter.get("/single/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await UserModel.findById(userId);
@@ -49,9 +49,9 @@ userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
   }
 });
 
-userRouter.get("/search", async (req, res) => {
+userRouter.get("/search/:input", async (req, res) => {
   try {
-    const { input } = req.body;
+    const { input } = req.params;
 
     const regexp = new RegExp(input, "i");
 

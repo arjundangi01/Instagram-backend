@@ -50,7 +50,7 @@ postRouter.get("/:userId", async (req, res) => {
 });
 
 // getting single post
-postRouter.get("/post:postId", async (req, res) => {
+postRouter.get("/post/:postId", async (req, res) => {
   const { postId } = req.params;
   const retrievedPost = await PostModel.findOne({ _id: postId });
   const authorId = retrievedPost.authorId;
