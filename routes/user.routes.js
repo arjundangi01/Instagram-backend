@@ -32,6 +32,19 @@ userRouter.get("/single/:userId", async (req, res) => {
     res.status(500).send({ msg: "internal server error" });
   }
 });
+userRouter.patch("/update", authentication, async (req, res) => {
+  try {
+    const payload = req.body;
+    const userId = req.userId;
+    const user = await UserModel.findByIdAndUpdate(userId, payload);
+    if (!user) {
+      res.status(404).send({ msg: "user not found" });
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ msg: "internal server error" });
+  }
+});
 userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
   try {
     const followers = await FollowerModel.distinct("followedBy", {
@@ -41,8 +54,15 @@ userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
       followedBy: req.userId,
     });
     const unfollowedUsers = await UserModel.find({ _id: { $nin: following } });
-    console.log(unfollowedUsers);
-    res.send(unfollowedUsers);
+    if (unfollowedUsers.length > 0) {
+      res.status(200).send(unfollowedUsers);
+    } else {
+      const pipeline = [{ $sample: { size: 10 } }];
+
+      const randomUsers = await UserModel.aggregate(pipeline).toArray();
+
+      res.send(randomUsers);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send({ msg: "internal server error" });
