@@ -7,11 +7,11 @@ const { authentication } = require("../middlewares/authentication.middleware");
 const postRouter = express.Router();
 
 //getting post for homepage if user  logged in
-postRouter.get("/private",authentication, async (req, res) => {
+postRouter.get("/private", authentication, async (req, res) => {
   const { userId } = req.userId;
   //   const userId = "user1";
 
-  const { page, limit } = req.query;
+  // const { page, limit } = req.query;
 
   const findUserFollowsTo = await FollowerModel.find(
     { followedBy: userId },
@@ -21,16 +21,12 @@ postRouter.get("/private",authentication, async (req, res) => {
   //  console.log(followedUserIds,findUserFollowsTo )
   const followedUserPosts = await PostModel.find({
     authorId: { $in: followedUserIds },
-  })
-    .skip(page * limit - limit)
-    .limit(limit);
+  });
 
   const remainingPosts = await PostModel.find({
     authorId: { $nin: followedUserIds },
-  })
-    .skip(page * limit - limit)
-    .limit(limit);
-  //   console.log(followedUserPosts);
+  });
+
   followedUserPosts.sort((a, b) => b.createdAt - a.createdAt);
   remainingPosts.sort((a, b) => b.createdAt - a.createdAt);
   const combinedPost = followedUserPosts.concat(remainingPosts);
@@ -41,10 +37,9 @@ postRouter.get("/private",authentication, async (req, res) => {
 //getting post for homepage if user not logged in
 postRouter.get("/public", async (req, res) => {
   const { page, limit } = req.query;
-  const allPostFromDB = await PostModel.find({})
-    .skip(page * limit - limit)
-    .limit(limit);
-  res.send(allPostFromDB);
+  const allPostFromDB = await PostModel.find({});
+
+  res.send(allPostFromDB.sort((a, b) => b.createdAt - a.createdAt));
 });
 
 // getting all post of particular user
@@ -55,7 +50,7 @@ postRouter.get("/:userId", async (req, res) => {
 });
 
 // getting single post
-postRouter.get("/post:postId", async (req, res) => {
+postRouter.get("/post/:postId", async (req, res) => {
   const { postId } = req.params;
   const retrievedPost = await PostModel.findOne({ _id: postId });
   const authorId = retrievedPost.authorId;
@@ -63,21 +58,26 @@ postRouter.get("/post:postId", async (req, res) => {
   res.send({ post: retrievedPost, user: authorOfPost });
 });
 
-postRouter.post("/",authentication, async (req, res) => {
+postRouter.post("/", authentication, async (req, res) => {
   try {
     const userId = req.userId;
-    // const userId = "aman";
 
-    const input = req.body;
-    const newObj = { ...input, authorId: userId };
-    const newPostAddedToDataBase = await PostModel.create(newObj);
-    res.send({ message: "Post Added", newPost: newPostAddedToDataBase });
+    const payload = req.body;
+    const user = await UserModel.findOne({ _id: userId });
+    const newObj = {
+      ...payload,
+      authorId: userId,
+      author: user.name,
+      authorImage: user.profileImage,
+    };
+    const createdPost = await PostModel.create(newObj);
+    res.send({ message: "Post Added", newPost: createdPost });
   } catch (error) {
     console.log("error while creating new Post", error);
   }
 });
 
-postRouter.delete("/:postId",authentication, async (req, res) => {
+postRouter.delete("/:postId", authentication, async (req, res) => {
   try {
     const userId = req.userId;
     // const userId = 'user1';
