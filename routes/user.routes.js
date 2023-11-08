@@ -139,7 +139,8 @@ userRouter.post("/login", async (req, res) => {
         res.cookie("insta_token", token, {
           httpOnly: false,
           sameSite: "none",
-          secure:true
+          secure: true,
+          domain:"http://localhost:3000"
         });
         res.send({ msg: "logged in successfully", token });
       }
