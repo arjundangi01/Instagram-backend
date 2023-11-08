@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
   postID: { type: String, required: true },
   user_id: { type: String, required: true },
   name: { type: String, required: true },
+  profileImage: { type: String, required: true },
   comment_like: Number,
 });
 
