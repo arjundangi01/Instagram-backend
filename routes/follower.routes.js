@@ -14,10 +14,20 @@ followerRouter.get("/:profile_id", async (req, res) => {
     // ["ids","ids","ids"]
     const userFollowers = follower.map((ele) => ele.followedBy);
     const userFollowingIds = following.map((ele) => ele.followedTo);
-    const userFollowersDetail = await UserModel.find({_id:{$in :userFollowers  }})
-    const userFollowsToDetail = await UserModel.find({_id:{$in :userFollowingIds  }})
 
-    res.json({ Followers: userFollowersDetail, Following: userFollowsToDetail,userFollowingIds });
+    const userFollowersDetail = await UserModel.find({
+      _id: { $in: userFollowers },
+    });
+    const userFollowsToDetail = await UserModel.find({
+      _id: { $in: userFollowingIds },
+    });
+
+    res.json({
+      followers: userFollowersDetail,
+      following: userFollowsToDetail,
+      userFollowingIds,
+    });
+
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +41,9 @@ followerRouter.post("/:profile_id", authentication, async (req, res) => {
       followedBy: userId,
       followedTo: profile_id,
     });
+
     res.send({message:"User Followed"})
+
   } catch (error) {
     console.log(error);
   }
@@ -45,6 +57,7 @@ followerRouter.delete("/:profile_id", authentication, async (req, res) => {
       followedBy: userId,
       followedTo: profile_id,
     });
+
     res.send({
       message: "follower removed",
     });
