@@ -5,6 +5,7 @@ const UserModel = require("../model/user.model");
 const checkUser = require("../middlewares/userMiddlewares/checkUser.middleware");
 const jwt = require("jsonwebtoken");
 const FollowerModel = require("../model/follower.model");
+const PostModel = require("../model/post.model");
 
 const userRouter = express.Router();
 const saltRounds = 10;
@@ -40,6 +41,13 @@ userRouter.patch("/update", authentication, async (req, res) => {
     if (!user) {
       res.status(404).send({ msg: "user not found" });
     }
+    if (payload.profileImage) {
+      const userPostsUpdate = await PostModel.updateMany(
+        { authorId: userId },
+        { $set: { authorImage: payload.profileImage } }
+      );
+    }
+
     res.send(user);
   } catch (err) {
     res.status(500).send({ msg: "internal server error" });
@@ -59,7 +67,7 @@ userRouter.get("/unfollowedUsers", authentication, async (req, res) => {
     } else {
       const pipeline = [{ $sample: { size: 10 } }];
 
-      const randomUsers = await UserModel.aggregate(pipeline).toArray();
+      const randomUsers = await UserModel.aggregate(pipeline);
 
       res.send(randomUsers);
     }

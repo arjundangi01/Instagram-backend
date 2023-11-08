@@ -29,6 +29,7 @@ commentRouter.post("/:post_id", authentication, async (req, res) => {
       postID: post_id,
       user_id: userId,
       name: user.name,
+      profileImage: user.profileImage,
     };
     const comment = await CommentModel.create(new_obj);
     res.send("commented on post");
