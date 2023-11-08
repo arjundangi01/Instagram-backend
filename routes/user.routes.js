@@ -136,12 +136,12 @@ userRouter.post("/login", async (req, res) => {
           userId: user._id,
         };
         const token = jwt.sign(userObj, "secretkey");
-        res.cookie("insta_token", token, {
-          httpOnly: false,
-          sameSite: "none",
-          secure: true,
+        // res.cookie("insta_token", token, {
+        //   httpOnly: false,
+        //   sameSite: "none",
+        //   secure: true,
           
-        });
+        // });
         res.send({ msg: "logged in successfully", token });
       }
     });
