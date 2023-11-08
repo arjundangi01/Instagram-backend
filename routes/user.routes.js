@@ -140,7 +140,7 @@ userRouter.post("/login", async (req, res) => {
           httpOnly: false,
           sameSite: "none",
           secure: true,
-          domain:"localhost"
+          
         });
         res.send({ msg: "logged in successfully", token });
       }
