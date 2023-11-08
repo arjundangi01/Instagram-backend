@@ -17,7 +17,7 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "http://localhost:3001","https://instaclonevi.netlify.app"],
     credentials: true,
   })
 );
