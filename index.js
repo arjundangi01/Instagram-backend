@@ -8,6 +8,8 @@ const notificationRouter = require("./routes/notification.routes");
 const followerRouter = require("./routes/follower.routes");
 const passport = require("passport");
 const likesRouter = require("./routes/likes.routes");
+const conversationRouter = require("./routes/conversation.routes");
+const messageRouter = require("./routes/message.routes");
 
 // --------------------
 require("dotenv").config();
@@ -17,7 +19,11 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001","https://instaclonevi.netlify.app"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://instaclonevi.netlify.app",
+    ],
     credentials: true,
   })
 );
@@ -31,6 +37,8 @@ app.use("/comments", commentRouter);
 app.use("/notifications", notificationRouter);
 app.use("/followers", followerRouter);
 app.use("/likes", likesRouter);
+app.use("/conversations", conversationRouter);
+app.use("/messages", messageRouter);
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
