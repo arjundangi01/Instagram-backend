@@ -5,14 +5,14 @@ const conversationRouter = require("express").Router();
 conversationRouter.post("/", async (req, res) => {
   try {
     const existingConversation = await conversationModel.findOne({
-      members: { $all: [senderId, receiverId] },
+      members: { $all: [req.body.senderId, req.body.receiverId] },
     });
     if (!existingConversation) {
       const newConversation = await conversationModel.create({
         members: [req.body.senderId, req.body.receiverId],
       });
 
-      res.status(200).json(newConversation);
+      return res.status(200).json(newConversation);
     }
 
     res.status(200).send(existingConversation);
