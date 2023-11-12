@@ -4,10 +4,18 @@ const conversationRouter = require("express").Router();
 
 conversationRouter.post("/", async (req, res) => {
   try {
-    const newConversation = await conversationModel.create({
-      members: [req.body.senderId, req.body.receiverId],
+    const existingConversation = await conversationModel.findOne({
+      members: { $all: [senderId, receiverId] },
     });
-    res.status(200).json(newConversation);
+    if (!existingConversation) {
+      const newConversation = await conversationModel.create({
+        members: [req.body.senderId, req.body.receiverId],
+      });
+
+      res.status(200).json(newConversation);
+    }
+
+    res.status(200).send(existingConversation);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "internal server error" });
